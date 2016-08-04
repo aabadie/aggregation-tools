@@ -30,6 +30,11 @@ import argparse
 import sys
 import logging
 
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    from urllib2 import HTTPError
+
 from iotlabaggregator import connections, common, zeptopcap, LOGGER
 
 
@@ -145,4 +150,11 @@ def main(args=None):
             LOGGER.info('%u packets captured', aggregator.rx_packets)
     except (ValueError, RuntimeError) as err:
         sys.stderr.write("%s\n" % err)
+        exit(1)
+    except HTTPError as err:  # should be first as it's an IOError
+        if err.code == 401:
+            # print an info on how to get rid of the error
+            err = ("HTTP Error 401: Unauthorized: Wrong login/password\n\n"
+                   "\tRegister your login:password using `auth-cli`\n")
+        sys.stderr.write("{0}\n".format(err))
         exit(1)
