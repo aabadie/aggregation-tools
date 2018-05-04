@@ -102,8 +102,10 @@ class Connection(object, dispatcher_with_send):  # pylint:disable=R0904
         #self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         if 'grenoble' in self.hostname:
             proxy_port = 1234
-        elif 'strasbourg' in self.hostname:
+        elif 'saclay' in self.hostname:
             proxy_port = 1236
+        elif 'strasbourg' in self.hostname:
+            proxy_port = 1238
         else:
             proxy_port = None
         print self.hostname, proxy_port
